@@ -34,4 +34,16 @@ RUN apt-get -qqy update && apt-get install -qqy \
     gcloud config set metrics/environment github_docker_image && \
     gcloud --version && \
     docker --version && kubectl version --client
+    
+# Install Ruby
+RUN cd /tmp && wget -O ruby-install-0.6.1.tar.gz https://github.com/postmodern/ruby-install/archive/v0.6.1.tar.gz && \
+    tar -xzvf ruby-install-0.6.1.tar.gz && \
+    cd ruby-install-0.6.1 && \
+    sudo make install && \
+    ruby-install --cleanup ruby 2.4.3 && \
+    rm -r /tmp/ruby-install-*
+
+ENV PATH ${HOME}/.rubies/ruby-2.4.3/bin:${PATH}
+RUN echo 'gem: --env-shebang --no-rdoc --no-ri' >> ~/.gemrc && gem install bundler
+
 VOLUME ["/root/.config"]
